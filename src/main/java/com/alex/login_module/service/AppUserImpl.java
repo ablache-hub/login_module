@@ -5,8 +5,10 @@ import com.alex.login_module.auth.Role;
 import com.alex.login_module.auth.SubRequestTemplate;
 import com.alex.login_module.repo.AppUserRepo;
 import com.alex.login_module.repo.RoleRepo;
+import com.sun.jdi.request.DuplicateRequestException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -31,9 +33,9 @@ public class AppUserImpl implements AppUserService, UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         AppUser appuser = appUserRepo.findByUsername(username);
-        if(appuser == null) {
-            log.error("Utilisateur inexistant");
-            throw new UsernameNotFoundException("Utilisateur inexistant");
+        if (appuser == null) {
+            log.error("L'utilisateur " +username+ " n'existe pas");
+            throw new UsernameNotFoundException("L'utilisateur " +username+ " n'existe pas");
         } else {
             log.info("Utilisateur {}", username);
         }
@@ -41,7 +43,7 @@ public class AppUserImpl implements AppUserService, UserDetailsService {
         appuser.getRoles().forEach(role -> {
             authorities.add(new SimpleGrantedAuthority(role.getName()));
         });*/
-         return new User(appuser.getUsername(), appuser.getPassword(), appuser.getAuthorities());
+        return new User(appuser.getUsername(), appuser.getPassword(), appuser.getAuthorities());
     }
 
     //TODO Ajouter controles divers
@@ -68,9 +70,14 @@ public class AppUserImpl implements AppUserService, UserDetailsService {
 
     @Override
     public void addRoleToUser(String username, String rolename) {
-        log.info("Ajout du rôle {} pour l'utilisateur {}", rolename, username);
         AppUser appUser = appUserRepo.findByUsername(username);
         Role role = roleRepo.findByName(rolename);
+        appUser.getRoles().forEach(eachRole -> {
+                    if (eachRole.getName().equals(role.getName())) {
+                        throw new DuplicateRequestException("Ce rôle est déjà attribué à cet utilisateur"); }
+                }
+        );
+        log.info("Ajout du rôle {} pour l'utilisateur {}", rolename, username);
         appUser.getRoles().add(role);
     }
 

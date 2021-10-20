@@ -2,11 +2,10 @@ package com.alex.login_module.controller;
 
 import com.alex.login_module.auth.AppUser;
 import com.alex.login_module.auth.Role;
+import com.alex.login_module.auth.RoleToUserTemplate;
 import com.alex.login_module.auth.SubRequestTemplate;
 import com.alex.login_module.service.AppUserService;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import lombok.Setter;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -45,9 +44,3 @@ public class AppUserController {
 
 }
 
-@Getter
-@Setter
-class RoleToUserTemplate {
-    private String username;
-    private String roleName;
-}
