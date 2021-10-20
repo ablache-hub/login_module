@@ -7,8 +7,8 @@ import com.alex.login_module.auth.SubRequestTemplate;
 import java.util.List;
 
 public interface AppUserService {
-    AppUser saveUser(SubRequestTemplate subUser);
-    Role saveRole(Role role);
+    AppUser newUser(SubRequestTemplate subUser);
+    Role newRole(Role role);
     void addRoleToUser(String username, String rolename);
     AppUser getUser(String username);
     List<AppUser> getUsers();

@@ -7,13 +7,11 @@ import com.alex.login_module.repo.AppUserRepo;
 import com.alex.login_module.repo.RoleRepo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -48,16 +46,22 @@ public class AppUserImpl implements AppUserService, UserDetailsService {
 
     //TODO Ajouter controles divers
     @Override
-    public AppUser saveUser(SubRequestTemplate subUser) {
+    public AppUser newUser(SubRequestTemplate subUser) {
         log.info("Enregistrement de l'utilisateur {}", subUser.getUsername());
         subUser.setPassword(passwordEncoder.encode(subUser.getPassword()));
         return appUserRepo.save(
-                new AppUser(subUser.getUsername(), subUser.getPassword())
+                new AppUser(
+                        subUser.getUsername(),
+                        subUser.getPassword())
         );
+ /*       Role role = roleRepo.findByName("ROLE_USER");
+        AppUser nouveau  = appUserRepo.findByUsername(subUser.getUsername());
+        nouveau.getRoles().add(role);
+        return nouveau;*/
     }
 
     @Override
-    public Role saveRole(Role role) {
+    public Role newRole(Role role) {
         log.info("Enregistrement du nouveau role {}", role.getName());
         return roleRepo.save(role);
     }

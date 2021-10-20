@@ -1,5 +1,6 @@
 package com.alex.login_module.auth;
 
+import com.alex.login_module.repo.RoleRepo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
@@ -17,6 +18,7 @@ import java.util.List;
 @Getter
 @Setter
 public class AppUser implements UserDetails {
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -27,6 +29,7 @@ public class AppUser implements UserDetails {
     @JsonIgnore
     @ManyToMany(fetch = FetchType.EAGER) // Recup l'utilisateur ET ses rôles
     private Collection<Role> roles = new ArrayList<>();
+
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -40,6 +43,7 @@ public class AppUser implements UserDetails {
     public AppUser(String username, String password) {
         this.username = username;
         this.password = password;
+        roles.add(new Role(1L, "ROLE_USER"));
     }
 
     @Override
