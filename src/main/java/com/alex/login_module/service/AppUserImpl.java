@@ -11,11 +11,11 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 @Service
@@ -26,7 +26,9 @@ public class AppUserImpl implements AppUserService, UserDetailsService {
 
     private final AppUserRepo appUserRepo;
     private final RoleRepo roleRepo;
+    private final BCryptPasswordEncoder passwordEncoder;
 
+    //TODO Completer "loadbyusername"
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         AppUser appuser = appUserRepo.findByUsername(username);
@@ -36,17 +38,18 @@ public class AppUserImpl implements AppUserService, UserDetailsService {
         } else {
             log.info("Utilisateur {}", username);
         }
-        Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
+/*        Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
         appuser.getRoles().forEach(role -> {
             authorities.add(new SimpleGrantedAuthority(role.getName()));
-        });
-         return new User(appuser.getUsername(), appuser.getPassword(), authorities);
+        });*/
+         return new User(appuser.getUsername(), appuser.getPassword(), appuser.getAuthorities());
     }
 
     //TODO Ajouter controles divers
     @Override
     public AppUser saveUser(AppUser user) {
         log.info("Enregistrement de l'utilisateur {}", user.getUsername());
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         return appUserRepo.save(user);
     }
 
