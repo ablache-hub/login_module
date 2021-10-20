@@ -1,5 +1,6 @@
 package com.alex.login_module.auth;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
@@ -19,6 +20,7 @@ public class AppUser {
     private String username;
     private String password;
 
+    @JsonIgnore
     @ManyToMany(fetch = FetchType.EAGER) // Recup l'utilisateur ET ses rôles
     private Collection<Role> roles = new ArrayList<>();
 }

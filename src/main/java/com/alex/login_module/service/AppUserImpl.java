@@ -6,19 +6,42 @@ import com.alex.login_module.repo.AppUserRepo;
 import com.alex.login_module.repo.RoleRepo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 @Transactional
 @Slf4j // Log
-public class AppUserImpl implements AppUserService {
+public class AppUserImpl implements AppUserService, UserDetailsService {
 
     private final AppUserRepo appUserRepo;
     private final RoleRepo roleRepo;
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        AppUser appuser = appUserRepo.findByUsername(username);
+        if(appuser == null) {
+            log.error("Utilisateur inexistant");
+            throw new UsernameNotFoundException("Utilisateur inexistant");
+        } else {
+            log.info("Utilisateur {}", username);
+        }
+        Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
+        appuser.getRoles().forEach(role -> {
+            authorities.add(new SimpleGrantedAuthority(role.getName()));
+        });
+         return new User(appuser.getUsername(), appuser.getPassword(), authorities);
+    }
 
     //TODO Ajouter controles divers
     @Override
