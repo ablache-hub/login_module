@@ -2,6 +2,7 @@ package com.alex.login_module.service;
 
 import com.alex.login_module.auth.AppUser;
 import com.alex.login_module.auth.Role;
+import com.alex.login_module.auth.SubRequestTemplate;
 import com.alex.login_module.repo.AppUserRepo;
 import com.alex.login_module.repo.RoleRepo;
 import lombok.RequiredArgsConstructor;
@@ -47,10 +48,12 @@ public class AppUserImpl implements AppUserService, UserDetailsService {
 
     //TODO Ajouter controles divers
     @Override
-    public AppUser saveUser(AppUser user) {
-        log.info("Enregistrement de l'utilisateur {}", user.getUsername());
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        return appUserRepo.save(user);
+    public AppUser saveUser(SubRequestTemplate subUser) {
+        log.info("Enregistrement de l'utilisateur {}", subUser.getUsername());
+        subUser.setPassword(passwordEncoder.encode(subUser.getPassword()));
+        return appUserRepo.save(
+                new AppUser(subUser.getUsername(), subUser.getPassword())
+        );
     }
 
     @Override

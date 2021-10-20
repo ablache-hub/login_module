@@ -2,6 +2,7 @@ package com.alex.login_module.controller;
 
 import com.alex.login_module.auth.AppUser;
 import com.alex.login_module.auth.Role;
+import com.alex.login_module.auth.SubRequestTemplate;
 import com.alex.login_module.service.AppUserService;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -26,9 +27,9 @@ public class AppUserController {
     }
 
     @PostMapping("/user/save")
-    public ResponseEntity<AppUser> saveUser(@RequestBody AppUser appUser) {
+    public ResponseEntity<AppUser> saveUser(@RequestBody SubRequestTemplate subUser) {
         URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/user/save").toUriString());
-        return ResponseEntity.created(uri).body(appUserService.saveUser(appUser));
+        return ResponseEntity.created(uri).body(appUserService.saveUser(subUser));
     }
 
     @PostMapping("/role/save")

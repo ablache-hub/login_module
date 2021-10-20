@@ -37,6 +37,11 @@ public class AppUser implements UserDetails {
         return authorities;
     }
 
+    public AppUser(String username, String password) {
+        this.username = username;
+        this.password = password;
+    }
+
     @Override
     public boolean isAccountNonExpired() {
         return true;
