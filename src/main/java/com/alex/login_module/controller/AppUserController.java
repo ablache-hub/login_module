@@ -7,6 +7,7 @@ import com.alex.login_module.auth.SubRequestTemplate;
 import com.alex.login_module.service.AppUserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -20,6 +21,7 @@ public class AppUserController {
     private final AppUserService appUserService;
 
     @GetMapping("/users")
+    @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<List<AppUser>> getAllUsers() {
         return ResponseEntity.ok().body(appUserService.getUsers());
     }

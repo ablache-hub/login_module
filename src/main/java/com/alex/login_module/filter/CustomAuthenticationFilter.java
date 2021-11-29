@@ -60,7 +60,14 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
                 .withIssuer(request.getRequestURL().toString())
                 .withClaim("roles", authentication.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()))
                 .sign(algorithm);
+        String refresh_token = JWT.create()
+                .withSubject(authentication.getName())
+                .withExpiresAt(new Date(System.currentTimeMillis() + 30 * 60 * 1000))
+                .withIssuer(request.getRequestURL().toString())
+                .sign(algorithm);
         response.setHeader("token", access_token);
+        response.setHeader("refresh_token", refresh_token);
+
     }
 
     //TODO Tester l'override de "unsuccessfulAuthent"
