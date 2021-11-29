@@ -42,10 +42,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public AuthenticationManager authenticationManagerBean() throws Exception {
         return super.authenticationManagerBean();
     }
-
-    @Override
-    public void configure(WebSecurity web) throws Exception {
-//        web.ignoring().antMatchers("/api/user/save", "/error", "/api/role/save", "/api/role/addroleuser");
-        web.ignoring().antMatchers("**");
-    }
+//
+//    @Override
+//    public void configure(WebSecurity web) throws Exception {
+////        web.ignoring().antMatchers("/api/user/save", "/error", "/api/role/save", "/api/role/addroleuser");
+//        web.ignoring().antMatchers("**");
+//    }
 }

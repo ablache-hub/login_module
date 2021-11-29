@@ -28,20 +28,9 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
 
     private final AuthenticationManager authenticationManager;
 
-   /* public CustomAuthenticationFilter(AuthenticationManager authenticationManager) {
-        this.authenticationManager = authenticationManager;
-    }*/
-
     // Récuperation de la requête et vérification pour l'authentification
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
-
-      /*      String username = request.getParameter("username");
-            String password = request.getParameter("password");
-            log.info("Le nom d'utilisateur est: {}", username);
-            log.info("Le mdp est: {}", password);
-            UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(username, password);
-            return authenticationManager.authenticate(authenticationToken);*/
 
         try {
             SubRequestTemplate authenticationRequest = new ObjectMapper().readValue(request.getInputStream(), SubRequestTemplate.class);
